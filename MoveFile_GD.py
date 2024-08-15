@@ -5,14 +5,14 @@ from googleapiclient.errors import HttpError
 from itertools import zip_longest
 
 # 設定 Google Sheets API 和 Google Drive API 認證
-SHEET_SERVICE_ACCOUNT_FILE = 'D:/DMM_list/rk-dmm-scrapying@dmm-scrapying.iam.gserviceaccount.com/dmm-scrapying-ca95a23a4216.json'  # 使用者A的Sheet API憑證
-DRIVE_SERVICE_ACCOUNT_FILE = 'D:/DMM_list/rk-dmm-scrapying@dmm-scrapying.iam.gserviceaccount.com/dmm-scrapying-ca95a23a4216.json'  # 使用者B的Drive API憑證
+SHEET_SERVICE_ACCOUNT_FILE = '$USER_A API.json'  # 使用者A的Sheet API憑證
+DRIVE_SERVICE_ACCOUNT_FILE = '$USER_B API.json'  # 使用者B的Drive API憑證
 
 # Google Sheets 認證
 sheet_credentials = Credentials.from_service_account_file(SHEET_SERVICE_ACCOUNT_FILE)
 sheet_client = pygsheets.authorize(service_account_file=SHEET_SERVICE_ACCOUNT_FILE)
  # 填入要讀取及編輯的Google Sheet
-spreadsheet_id = '1CSJW28pvLHj9w3L1fiJhZp3opGdHLPdq1EdhqwaqIzs'
+spreadsheet_id = '$USER_A sheet ID'
 sh = sheet_client.open_by_key(spreadsheet_id)
 
 # Google Drive 認證
@@ -20,8 +20,8 @@ drive_credentials = Credentials.from_service_account_file(DRIVE_SERVICE_ACCOUNT_
 drive_service = build('drive', 'v3', credentials=drive_credentials)
 
 # 設定 Team Drive ID 和目標資料夾 ID，這邊都為Team Drive根目錄的ID
-TEAM_DRIVE_ID = '0AOj7YJoxqthlUk9PVA'
-PARENT_FOLDER_ID = '0AOj7YJoxqthlUk9PVA'  # 根據需要設定搜尋和創建資料夾的目標資料夾ID
+TEAM_DRIVE_ID = '$root_id'
+PARENT_FOLDER_ID = '$parent_folder_id'  # 根據需要設定搜尋和創建資料夾的目標資料夾ID
 
 # 建立資料夾
 def create_folder(name, parent_id=None):
@@ -111,12 +111,7 @@ def main():
     print(f"目前所有存在工作表： {worksheets}") 
 
     # 設定排除工作表
-    exclude_sheets = ["讀我", "女優列表", "TempList", "波多野手動刪除的資料", "小泉彩RK已下載", "「桜朱音」RK已下載", "「さくら林檎」勞贖處理過", "愛田由PBList", "橘れもん_Old", "早乙女ルイ_old",
-                      "水卜さくら", "河北彩花", "さくら林檎", "白石ひとみ", "相沢梨菜", "及川奈央", "堤さやか", "松島かえで", "小泉彩", "里美ゆりあ", "高井桃", "持月真由", "穂花(wrong)", "美織", "赤井美月", "篠宮ゆり", "あやみ旬果", "上原亜衣", "桐谷ユリア", "絵色千佳", "美雪ありす", "北川瞳",
-                      "小倉奈々", "水嶋あずみ", "椎名ゆな", "桜ここみ", "あいだゆあ", "RIONA(りおな)", "成瀬心美", "水原あき", "山手栞", "くるみひな", "杏樹紗奈", "穂花", "小倉ゆず", "鈴木心春", "松岡ちな", "愛乃なみ", "桃谷エリカ", "桐原エリカ", "麻倉憂", "桜ここみ", "希志あいの", "大橋未久",
-                      "折原ほのか", "高樹マリア", "鮎川あみ", "桜朱音", "川島和津実", "かすみ果穂", "橘くらら", "冬月かえで", "前嶋美歩", "香坂百合", "一ノ瀬アメリ", "星野あかり", "神谷姫", "神谷美雪", "小沢菜穂", "美竹涼子", "峰なゆか", "稲森しほり", "菅野亜梨沙", "さとう遥希", "早乙女ルイ", "鈴村あいり", "果梨",
-                      "椎名そら",
-                      "波多野結衣"]  # 在此列表中加入要排除的分頁名稱
+    exclude_sheets = ["$Worksheet Name"]  # 在此列表中加入要排除的分頁名稱
     
     #print(f"排除工作表： {exclude_sheets}") 
 
