@@ -193,18 +193,20 @@ def main():
                     
                     # 根據Folder ID取得資料夾名稱
                     target_folder_name = get_folder_name_by_id(target_folder_id)
+                    
+                    str = "個人作品"
+                    if str not in target_folder_name:
+                        if target_folder_id in file.get('parents', []):
+                            print(f"檔案 '{file_name}' 已存在於資料夾：'{target_folder_name}' 中，跳過移動。")
+                        else:
+                            move_file(file['id'], target_folder_id)
+                            print(f"已將檔案 '{file_name}' 移動到資料夾：'{target_folder_name}'。")
 
-                    if target_folder_id in file.get('parents', []):
-                        print(f"檔案 '{file_name}' 已存在於資料夾：'{target_folder_name}' 中，跳過移動。")
-                    else:
-                        move_file(file['id'], target_folder_id)
-                        print(f"已將檔案 '{file_name}' 移動到資料夾：'{target_folder_name}'。")
-
-                    print(f"檔案 '{file_name}' 已存在或被移動到'{target_folder_name}' 。")
-           
-                    if cell_value == '':
-                        worksheet.update_value(f'A{row}', target_folder_name)
-                        print(f"更新 'A{row}' 資料為： {target_folder_name} 。")
+                        print(f"檔案 '{file_name}' 已存在或被移動到'{target_folder_name}' 。")
+            
+                        if cell_value == '':
+                            worksheet.update_value(f'A{row}', target_folder_name)
+                            print(f"更新 'A{row}' 資料為： {target_folder_name} 。")
         else:
             print(f"無法建立或取得資料夾的 ID。")
 
