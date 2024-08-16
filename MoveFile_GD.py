@@ -71,6 +71,21 @@ def search_file(name, parent_id=None):
     except HttpError as error:
         print(f'搜尋檔案時發生錯誤: {error}')
         return []
+    
+# 取得目前檔案所在資料夾
+def get_current_folder_name(target_file):
+    parents = target_file.get('parents', [])
+    parent_id = parents[0]
+    # 透過 parent_id 取得資料夾資訊
+    folder_info = drive_service.files().get(
+        fileId=parent_id, 
+        fields='id, name', 
+        supportsAllDrives=True
+    ).execute()
+        
+    current_folder_name = folder_info.get('name')
+    print(f"檔案： '{target_file['name']}' 目前位於資料夾: {current_folder_name} (ID: {parent_id})")
+    return current_folder_name
 
 # 移動檔案
 def move_file(file_id, folder_id):
@@ -193,9 +208,15 @@ def main():
                     
                     # 根據Folder ID取得資料夾名稱
                     target_folder_name = get_folder_name_by_id(target_folder_id)
+
+                    # 取得目前檔案所在的資料夾
+                    current_folder_name = get_current_folder_name(file)
                     
+                    # 宣告一個字串
                     str = "個人作品"
-                    if str not in target_folder_name:
+                    
+                    # 如果字串個人作品不存在目前檔案的資料夾名稱，則往下跑。即：如果檔案還已被歸類到制定的資料夾名稱就不移動檔案，避免同檔案一直被移動。
+                    if str not in current_folder_name:
                         if target_folder_id in file.get('parents', []):
                             print(f"檔案 '{file_name}' 已存在於資料夾：'{target_folder_name}' 中，跳過移動。")
                         else:
@@ -207,6 +228,13 @@ def main():
                         if cell_value == '':
                             worksheet.update_value(f'A{row}', target_folder_name)
                             print(f"更新 'A{row}' 資料為： {target_folder_name} 。")
+                    else:
+                        print(f"檔案 '{file_name}' 已存在資料夾 '{target_folder_name}' 中，不移動。")
+                        if cell_value == '':
+                            if current_folder_name == target_folder_name:
+                                worksheet.update_value(f'A{row}', current_folder_name) 
+                            else:
+                                worksheet.update_value(f'A{row}', f"已歸類到資料夾：{current_folder_name}")
         else:
             print(f"無法建立或取得資料夾的 ID。")
 
